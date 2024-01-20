@@ -1,0 +1,18 @@
+pkg install proot-distro
+proot-distro install ubuntu
+proot-distro login ubuntu --user root --shared-tmp -- bash -c"apt update"
+sleep 5
+proot-distro login ubuntu --user root --shared-tmp -- bash -c"apt upgrade"
+sleep 3
+proot-distro login ubuntu --user root --shared-tmp -- bash -c"apt install sudo vim -y"
+sleep 5
+proot-distro login ubuntu --user root --shared-tmp -- bash -c"passwd && groupadd storage && groupadd wheel && groupadd video && useradd -m -g users -G wheel,audio,video,storage -s /bin/bash user && passwd user"
+
+sleep 5
+
+vim /etc/sudoers
+
+sleep 15
+
+proot-distro login ubuntu --user user --shared-tmp -- bash -c"sudo apt update && sudo apt install xfce4 && sudo apt-get autopurge snapd && cat <<EOF | sudo tee /etc/apt/preferences.d/nosnap.pref # To prevent repository packages from triggering the installation of Snap, # this file forbids snapd from being installed by APT. # For more information: https://linuxmint-user-guide.readthedocs.io/en/latest/snap.html Package: snapd Pin: release a=* Pin-Priority: -10 EOF && sudo apt install software-properties-common && sudo add-apt-repository ppa:mozillateam/ppa && sudo apt-get update && sudo apt-get install firefox-esr"
+proot-distro login ubuntu --user user --shared-tmp
